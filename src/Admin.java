@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Admin {
 
     private static final int password = 123;
-    private static final String fileName = "src/menu.txt";
+    private static final String fileName = "src/data/menu.txt";
 
     //METHOD THAT READS FILE MENU.txt AND REWRITES IT OT ARRAYLIST IF IT'S DIFFERENT;
     public static void updateMenu(){
@@ -77,8 +77,18 @@ public class Admin {
 
     }
 
-    public static void changePrice(int id, double p){
-        Coffee.menu.get(id).setPrice(p);
+    public static void changePrice(int id, double newPrice){
+        Coffee.menu.get(id).setPrice(newPrice);//UPDATE PRICE FOR THE CURRENT MENU LIST;
+
+        //Rewrite updated menu to a file;
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
+            for(Coffee e : Coffee.menu) {
+                bw.write(e.getName() + " " + e.getPrice() + "\n");
+            }
+        } catch (IOException ex) {
+            System.out.println("something went wrong while deleting item...");
+        }
+
     }
 
     public static boolean passwordCheck(int p){

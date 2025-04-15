@@ -11,6 +11,7 @@ public class Receipt {
     double change;
     Date date;
     static ArrayList<Receipt> historyOfReceipts = new ArrayList<>();
+    public static final String receiptFile = "src/data/receipts.txt";
 
     //Constructor of receipt for CASH payment
     public Receipt(Coffee item, double price, String paymentMethod ,double amount, double change, Date date){
@@ -31,12 +32,9 @@ public class Receipt {
 
     public static void addToHistory(Receipt r){
         historyOfReceipts.add(r);
-        write("receipts.txt", historyOfReceipts);
+        write(receiptFile, historyOfReceipts);
     }
 
-    public static void printHistory(){
-        read("receipts.txt");
-    }
 
     public String toString (){
         return "[ Item: " + item + "| Payment method: " + paymentMethod + "| Amount: " + amount + "| Change: " + change + "| Date " + date;
@@ -58,9 +56,9 @@ public class Receipt {
 
     }
 
-    public static void read(String fileName) {
+    public static void printHistory() {
         try{
-            FileReader fr = new FileReader(fileName);
+            FileReader fr = new FileReader(receiptFile);
             BufferedReader br = new BufferedReader(fr);
             String line;
 

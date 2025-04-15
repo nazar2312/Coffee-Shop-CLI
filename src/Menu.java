@@ -7,10 +7,8 @@ public class Menu {
         Scanner in = new Scanner(System.in);
         int mode = 0;
         do{
-
             //UPDATE MENU EVERY TIME PROGRAM IS STARTED;
             Admin.updateMenu();
-
 
             System.out.println(
                     "\n\n\n_____________________________________________________\n" +
@@ -22,38 +20,54 @@ public class Menu {
 
             try{
                 mode = in.nextInt();
-            }catch(InputMismatchException e){
-                in.nextLine();
-                System.out.println("try again...");
+            }catch(Exception e){
+                System.out.println("Something went wrong...");
+                break;
             }
 
 
             switch(mode){
-                //Customer mode:
-                case 1:
-                    System.out.println(
-                    " _____________________________________________________\n"+
-                    "|                PLEASE SELECT COFFEE               | \n"+
-                    " _____________________________________________________\n");
-                    Coffee.showAllCoffees();
-                    Coffee item;
-                    System.out.println(
-                            " _____________________________________________________\n"+
-                            "enter:");
-                    try {
-                        item = Coffee.getObject(in.nextInt());
-                        System.out.println(
-                                " _____________________________________________________\n"+
-                                "        YOU'VE SELECTED: '" + item.getName() + ", " + item.getPrice() +"$ '\n"+
-                                " _____________________________________________________\n");
 
-                    }catch (IndexOutOfBoundsException e){
-                        System.out.print("Select coffee from existing! Try again: ");
-                        item = Coffee.getObject(in.nextInt());
+                //CUSTOMER MODE
+                case 1:
+
+                    Coffee item = null;
+                    boolean readyToPay = false;
+                    double total = 0.0;
+                    Cart.cart.clear();
+                    do {
                         System.out.println(
                                 " _____________________________________________________\n" +
-                                "        YOU'VE SELECTED: '" + item.getName() + ", " + item.getPrice() +"$ '\n" );
-                    }
+                                        "|                PLEASE SELECT COFFEE               | \n" +
+                                        " _____________________________________________________\n");
+                        Coffee.showAllCoffees();
+                        System.out.println("Select (-1) to progress to payments");
+                        System.out.println(
+                                " _____________________________________________________\n" +
+                                        "enter:");
+                        try {
+                            var selector = in.nextInt();
+                            if(selector == -1 && !Cart.cart.isEmpty()){ //If input is -1 -> progress to payment section.
+                                readyToPay = true;
+                                break;
+                            }
+                            item = Coffee.getObject(selector);
+                            Cart.cart.add(item);
+                            Cart.showCart();
+                            total = Cart.total();
+                            System.out.println("Your total " + total + "$");
+
+                        }catch (IndexOutOfBoundsException e) {
+                            System.out.print("Select coffee from existing! Try again: ");
+                            item = Coffee.getObject(in.nextInt());
+                            Cart.cart.add(item);
+                            Cart.showCart();
+                            total = Cart.total();
+                            System.out.println("Your total " + total + "$");
+                        }
+
+                    }while(!readyToPay);
+
 
                     System.out.println(
                             "SELECT PAYMENT METHOD:\n|1|VISA |2| MASTERCARD |3|CASH |4|CANCEL\n"+
@@ -73,33 +87,61 @@ public class Menu {
                     switch (type){
 
                         case 1:
-                            Receipt.addToHistory(new Receipt(item, item.getPrice(), "VISA",  new Date()));
-                            for(int i = 0; i < 10; i++){
-                                System.out.println("\n");
+                            for(Coffee c : Cart.cart) {
+                                Receipt.addToHistory(new Receipt(c, c.getPrice(), "VISA", new Date()));
                             }
                             System.out.println(
                                     "_________________________________\n"+
-                                    "       Payment is successful! " +
-                                    "\n         Item: " + item.getName() +
-                                    "\n         Price: " + item.getPrice() +"$"+
-                                    "\n\n         paid with VISA" +
-                                    "\n+_______________________________+"
+                                    "       Payment is successful! \n"
                             );
+                            if(Cart.cart.size() == 1) {
+                                System.out.println("        Products: "
+                                        + Cart.cart.getFirst().getName() + " " + Cart.cart.getFirst().getPrice() + "$"
+                                        +"\n        Total: " + Cart.total() + "$"
+                                                +"\n        paid with VISA"
+                                                +"\n+_______________________________+"
+                                );
+                            }else if(Cart.cart.size() > 1){
+                                System.out.println("        Products: ");
+                                for(Coffee c : Cart.cart){
+                                    System.out.println(c.getName() + " " + c.getPrice() + "$");
+                                }
+                                System.out.println(
+                                        "\n        Total: " + Cart.total() + "$"
+                                        +"\n        paid with VISA"
+                                        +"\n+_______________________________+"
+                                );
+                            }
+
                             break;
 
                         case 2:
-                            Receipt.addToHistory(new Receipt(item, item.getPrice(), "MASTERCARD",  new Date()));
-                            for(int i = 0; i < 10; i++){
-                                System.out.println("\n");
+                            for(Coffee c : Cart.cart) {
+                                Receipt.addToHistory(new Receipt(c, c.getPrice(), "MASTERCARD", new Date()));
                             }
                             System.out.println(
-                                    "_______________________________\n"+
-                                            "       Payment is successful! " +
-                                            "\n         Item: " + item.getName() +
-                                            "\n         Price: " + item.getPrice() +"$"+
-                                            "\n\n        paid with MASTERCARD" +
-                                            "\n+_______________________________+"
+                                    "_________________________________\n"+
+                                            "       Payment is successful! \n"
                             );
+                            if(Cart.cart.size() == 1) {
+                                System.out.println("        Products: "
+                                        + Cart.cart.get(0).getName() + " " + Cart.cart.get(0).getPrice() + "$"
+                                        +"\n        Total: " + Cart.total() + "$"
+                                        +"\n        paid with MASTERCARD"
+                                        +"\n+_______________________________+"
+                                );
+                            }else if(Cart.cart.size() > 1){
+                                System.out.println("        Products: ");
+                                for(Coffee c : Cart.cart){
+                                    System.out.println(c.getName() + " " + c.getPrice() + "$");
+                                }
+                                System.out.println(
+                                        "\n        Total: " + Cart.total() + "$"
+                                                +"\n        paid with MASTERCARD"
+                                                +"\n+_______________________________+"
+                                );
+                            }
+
                             break;
 
 
@@ -107,36 +149,50 @@ public class Menu {
                             System.out.print("|PLEASE ENTER AMOUNT: ");
                             double amount = in.nextDouble();
 
-                            if(amount < item.getPrice()){
+                            if(amount < total){
                                 System.out.println(
-                                        "Please enter right amount! Product price is: " + item.getPrice()+
-                                        "\nenter: ");
+                                        "Amount is less that total price!");
                                 amount = in.nextDouble();
 
-                                if(amount < item.getPrice()){
-                                    System.out.println("Something went wrong...");
+                                if(amount < total){
+                                    System.out.println("Payment's canceled.");
                                     break;
                                 }
                                 break;
                             }
                             //Calculating change and round it to 2 decimal places;
-                            double change = amount - item.getPrice();
+                            double change = amount - total;
                             change = Double.parseDouble(String.format("%.2f", change));
 
-                            Receipt.addToHistory(new Receipt(item, item.getPrice(),"CASH", amount, change,  new Date()));
-                            for(int i = 0; i < 10; i++){
-                                System.out.println("\n");
+                            //
+                            for(Coffee c : Cart.cart) {
+                                Receipt.addToHistory(new Receipt(c, c.getPrice(), "CASH", amount, change, new Date()));
                             }
                             System.out.println(
-                                    "_______________________________\n"+
-                                            "       Payment is successful! " +
-                                            "\n         Item: " + item.getName() +
-                                            "\n         Price: " + item.getPrice() +"$"+
-                                            "\n         Change: " + change +"$" +
-                                            "\n\n        paid with Cash" +
-                                            "\n+_______________________________+"
-
+                                    "_________________________________\n"+
+                                            "       Payment is successful! \n"
                             );
+                            if(Cart.cart.size() == 1) {
+                                System.out.println("        Products: "
+                                        + Cart.cart.getFirst().getName() + " " + Cart.cart.getFirst().getPrice() + "$"
+                                        +"\n        Total: " + Cart.total() + "$"+
+                                        "\n         Change: " + change +"$" +
+                                        "\n\n        paid with Cash" +
+                                        "\n+_______________________________+"
+                                );
+                            }else if(Cart.cart.size() > 1){
+                                System.out.println("        Products: ");
+                                for(Coffee c : Cart.cart){
+                                    System.out.println(c.getName() + " " + c.getPrice() + "$");
+                                }
+                                System.out.println(
+                                                "\n        Total: " + Cart.total() + "$"+
+                                                "\n         Change: " + change +"$"+
+                                                "\n\n        paid with Cash" +
+                                                "\n+_______________________________+"
+                                );
+                            }
+
                             break;
 
                         case 4:
@@ -181,8 +237,13 @@ public class Menu {
                                     |5| LOGOUT
                                     """ +
                                     " _____________________________________________________");
-
-                    int option = in.nextInt();
+                    int option;
+                    try{
+                        option = in.nextInt();
+                    }catch(InputMismatchException e){
+                        System.out.println("Something went wrong...");
+                        break;
+                    }
                     switch(option){
 
                         case 1:
@@ -214,21 +275,18 @@ public class Menu {
                         case 3:
                             System.out.println("Please select item and enter new price [id _ new price]");
                             Coffee.showAllCoffees();
-                            int Id = in.nextInt();
-                            double newP = in.nextDouble();
+                            int id = in.nextInt();
+                            double newPrice = in.nextDouble();
 
                             try {
-                                Admin.changePrice(Id, newP);
-                            }catch (IndexOutOfBoundsException e){
-                                System.out.println("ENTER CORRECT VALUES!");
+                                Admin.changePrice(id, newPrice);
+                            }catch (Exception e){
+                                System.out.println("Something went wrong...");
+                                break;
                             }
-                            Id = in.nextInt();
-                            newP = in.nextDouble();
-                            Admin.changePrice(Id, newP);
 
-                            System.out.println("Item: '" + Coffee.menu.get(Id).getName() + "' has new price = " + newP + "$" );
+                            System.out.println("Item: '" + Coffee.menu.get(id).getName() + "' has new price = " + newPrice + "$" );
                             break;
-
 
                         case 4:
                             Admin.viewReceipts();
@@ -238,7 +296,5 @@ public class Menu {
                     }
             }
         }while(true);
-
     }
-
 }
