@@ -1,18 +1,16 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 
 public class Coffee {
 
     private String name;
     private double price;
+
     //Default menu;
-    public static ArrayList<Coffee> menu = new ArrayList<>(Arrays.asList(
-            new Coffee("Americano", 3.20),
-            new Coffee("Latte", 3.80),
-            new Coffee("Mocha", 4.50),
-            new Coffee("Cappuccino", 4.10)
-    ));
-
-
+    public static ArrayList<Coffee> menu = new ArrayList<>();
 
     //Constructor method
     public Coffee(String n, double p){
@@ -41,7 +39,7 @@ public class Coffee {
     }
 
     public String toString(){
-        return "[NAME: " + getName() + ", PRICE: " + getPrice()+" ]";
+        return "[NAME: " + getName() + ", PRICE: " + getPrice()+ "$" + " ]";
     }
 
 

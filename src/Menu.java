@@ -4,17 +4,21 @@ import java.util.*;
 public class Menu {
 
     public static void main(String...args){
-
         Scanner in = new Scanner(System.in);
-
         int mode = 0;
         do{
-            System.out.println("\n \n \n ");
-            System.out.println(" _____________________________________________________");
-            System.out.println("|          WELCOME TO THE COFFEE SHOP                 |");
-            System.out.println("|      SELECT MODE: |1| CUSTOMER , |2|ADMIN             |");
-            System.out.println(" _____________________________________________________");
-            System.out.print("enter:");
+
+            //UPDATE MENU EVERY TIME PROGRAM IS STARTED;
+            Admin.updateMenu();
+
+
+            System.out.println(
+                    "\n\n\n_____________________________________________________\n" +
+                    "|          WELCOME TO THE COFFEE SHOP                 |\n" +
+                    "|      SELECT MODE: |1| CUSTOMER , |2|ADMIN           |\n" +
+                    " _____________________________________________________\n"+
+                    "enter:"
+            );
 
             try{
                 mode = in.nextInt();
@@ -27,31 +31,34 @@ public class Menu {
             switch(mode){
                 //Customer mode:
                 case 1:
-                    System.out.println("\n");
-                    System.out.println(" _____________________________________________________");
-                    System.out.println("|                PLEASE SELECT COFFEE               | ");
-                    System.out.println(" _____________________________________________________");
+                    System.out.println(
+                    " _____________________________________________________\n"+
+                    "|                PLEASE SELECT COFFEE               | \n"+
+                    " _____________________________________________________\n");
                     Coffee.showAllCoffees();
                     Coffee item;
-                    System.out.println(" _____________________________________________________");
-                    System.out.print("enter:");
+                    System.out.println(
+                            " _____________________________________________________\n"+
+                            "enter:");
                     try {
                         item = Coffee.getObject(in.nextInt());
-                        System.out.println("\n");
-                        System.out.println(" _____________________________________________________");
-                        System.out.println("        YOU'VE SELECTED: '" + item.getName() + ", " + item.getPrice() +"$ '" );
-                        System.out.println(" _____________________________________________________");
+                        System.out.println(
+                                " _____________________________________________________\n"+
+                                "        YOU'VE SELECTED: '" + item.getName() + ", " + item.getPrice() +"$ '\n"+
+                                " _____________________________________________________\n");
 
                     }catch (IndexOutOfBoundsException e){
                         System.out.print("Select coffee from existing! Try again: ");
                         item = Coffee.getObject(in.nextInt());
-                        System.out.println(" _____________________________________________________");
-                        System.out.println("        YOU'VE SELECTED: '" + item.getName() + ", " + item.getPrice() +"$ '" );
+                        System.out.println(
+                                " _____________________________________________________\n" +
+                                "        YOU'VE SELECTED: '" + item.getName() + ", " + item.getPrice() +"$ '\n" );
                     }
 
-                    System.out.println("SELECT PAYMENT METHOD: \n|1|VISA |2| MASTERCARD |3|CASH |4|CANCEL");
-                    System.out.println(" _____________________________________________________");
-                    System.out.print("enter: ");
+                    System.out.println(
+                            "SELECT PAYMENT METHOD:\n|1|VISA |2| MASTERCARD |3|CASH |4|CANCEL\n"+
+                            "_____________________________________________________\n"+
+                            "enter: ");
                     int type = in.nextInt();
 
                     if(type < 1 || type > 4){
@@ -67,10 +74,32 @@ public class Menu {
 
                         case 1:
                             Receipt.addToHistory(new Receipt(item, item.getPrice(), "VISA",  new Date()));
+                            for(int i = 0; i < 10; i++){
+                                System.out.println("\n");
+                            }
+                            System.out.println(
+                                    "_________________________________\n"+
+                                    "       Payment is successful! " +
+                                    "\n         Item: " + item.getName() +
+                                    "\n         Price: " + item.getPrice() +"$"+
+                                    "\n\n         paid with VISA" +
+                                    "\n+_______________________________+"
+                            );
                             break;
 
                         case 2:
                             Receipt.addToHistory(new Receipt(item, item.getPrice(), "MASTERCARD",  new Date()));
+                            for(int i = 0; i < 10; i++){
+                                System.out.println("\n");
+                            }
+                            System.out.println(
+                                    "_______________________________\n"+
+                                            "       Payment is successful! " +
+                                            "\n         Item: " + item.getName() +
+                                            "\n         Price: " + item.getPrice() +"$"+
+                                            "\n\n        paid with MASTERCARD" +
+                                            "\n+_______________________________+"
+                            );
                             break;
 
 
@@ -79,8 +108,9 @@ public class Menu {
                             double amount = in.nextDouble();
 
                             if(amount < item.getPrice()){
-                                System.out.println("Please enter right amount! Product price is: " + item.getPrice());
-                                System.out.print("enter: ");
+                                System.out.println(
+                                        "Please enter right amount! Product price is: " + item.getPrice()+
+                                        "\nenter: ");
                                 amount = in.nextDouble();
 
                                 if(amount < item.getPrice()){
@@ -94,6 +124,19 @@ public class Menu {
                             change = Double.parseDouble(String.format("%.2f", change));
 
                             Receipt.addToHistory(new Receipt(item, item.getPrice(),"CASH", amount, change,  new Date()));
+                            for(int i = 0; i < 10; i++){
+                                System.out.println("\n");
+                            }
+                            System.out.println(
+                                    "_______________________________\n"+
+                                            "       Payment is successful! " +
+                                            "\n         Item: " + item.getName() +
+                                            "\n         Price: " + item.getPrice() +"$"+
+                                            "\n         Change: " + change +"$" +
+                                            "\n\n        paid with Cash" +
+                                            "\n+_______________________________+"
+
+                            );
                             break;
 
                         case 4:
@@ -129,15 +172,15 @@ public class Menu {
 
 
                     //Admin panel;
-                    System.out.println(" _____________________________________________________");
-                    System.out.println(
+                    System.out.println("\n\n\n_____________________________________________________\n"+
                                     """
                                                 WELCOME TO ADMIN PANEL
                                                SELECT OPTION FROM BELOW
-                                    |1| ADD ITEM |2| REMOVE ITEM |3| CHANGE PRICE |4| VIEW TRANSACTION LIST
+                                    |1| ADD ITEM |2| REMOVE ITEM |3| CHANGE PRICE
+                                    |4| VIEW TRANSACTION LIST
                                     |5| LOGOUT
-                                    """);
-                    System.out.println(" _____________________________________________________");
+                                    """ +
+                                    " _____________________________________________________");
 
                     int option = in.nextInt();
                     switch(option){
@@ -153,21 +196,18 @@ public class Menu {
 
                         case 2:
 
-                            System.out.println("Please enter id of item to remove: ");
-                            int id;
+                            System.out.println("Please enter item to remove: ");
+
 
                             try {
-                                id = in.nextInt();
-                                Admin.removeCoffeeFromTheMenu(id);
+                                String itemToDelete = in.next();
+                                Admin.removeCoffeeFromTheMenu(itemToDelete);
                             }catch(Exception e){
                                 System.out.println("Please enter existing id! ");
-                                id = in.nextInt();
-                                if(id > Coffee.menu.size())
-                                    System.out.println("Something went wrong...");
                                 break;
                             }
 
-                            System.out.println("Item: " + Coffee.menu.get(id).getName() + " - removed");
+                            System.out.println("Item removed");
                             break;
 
 
@@ -196,10 +236,6 @@ public class Menu {
                         case 5:
                             break;
                     }
-
-
-
-
             }
         }while(true);
 
