@@ -11,7 +11,7 @@ public class Receipt {
     double change;
     Date date;
     static ArrayList<Receipt> historyOfReceipts = new ArrayList<>();
-    public static final String receiptFile = "src/data/receipts.txt";
+    public static final String receiptFile = "receipts.txt";
 
     //Constructor of receipt for CASH payment
     public Receipt(Coffee item, double price, String paymentMethod ,double amount, double change, Date date){
