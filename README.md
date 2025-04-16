@@ -5,7 +5,7 @@ This is my final project for the first-year programing module at Technological U
 
 # 📌 Features
 
-- Customer and admin modes
+- Customer and admin modes (PASSWORD TO ACCESS ADMIN MODE - 123)
 - Runtime menu updates(add,delete)
 - Simulated payment system(Visa, Mastercard, Cash)
 - Saving all transactions to external file.
