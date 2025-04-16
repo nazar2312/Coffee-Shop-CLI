@@ -4,11 +4,10 @@ import java.util.*;
 public class Menu {
 
     public static void main(String...args){
-        Scanner in = new Scanner(System.in);
-        System.out.println(Admin.menuFile);
-        System.out.println(Receipt.receiptFile);
 
+        Scanner in = new Scanner(System.in);
         int mode = 0;
+
         do{
             //UPDATE MENU EVERY TIME PROGRAM IS STARTED;
             Admin.updateMenu();
